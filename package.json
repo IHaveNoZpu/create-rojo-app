@@ -1,0 +1,29 @@
+{
+  "name": "sora",
+  "version": "1.0.0",
+  "description": "Create Rojo apps with one command",
+  "main": "src/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IHaveNoZpu/sora.git"
+  },
+  "author": "IHaveNoZpu",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/IHaveNoZpu/sora/issues"
+  },
+  "homepage": "https://github.com/IHaveNoZpu/sora#readme",
+  "dependencies": {
+    "chalk": "^5.0.0",
+    "commander": "^8.3.0",
+    "fs-extra": "^10.0.0",
+    "inquirer": "^8.2.0",
+    "path": "^0.12.7"
+  }
+}

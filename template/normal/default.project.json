@@ -1,0 +1,35 @@
+{
+	"name": "templateName",
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"Game": {
+				"$path": "src/Shared"
+			},
+			"Packages": {
+				"$path": "Packages"
+			}
+		},
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"Game": {
+				"$path": "src/Server/Script"
+			}
+		},
+		"ServerStorage": {
+			"$className": "ServerStorage",
+			"Game": {
+				"$path": "src/Server/Storage"
+			}
+		},
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+			"StarterPlayerScripts": {
+				"Game": {
+					"$path": "src/Client/Script"
+				}
+			}
+		}
+	}
+}
