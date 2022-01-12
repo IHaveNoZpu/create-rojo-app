@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/IHaveNoZpu/sora#readme",
   "dependencies": {
-    "chalk": "^5.0.0",
+    "chalk": "^4.1.2",
     "commander": "^8.3.0",
     "fs-extra": "^10.0.0",
     "inquirer": "^8.2.0",
