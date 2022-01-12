@@ -5,10 +5,10 @@ Create Rojo apps with one command
 Sora is now in **development**. so there will have a bug and  some feture that unfinish.
 
 ## Requirement
-- [foreman](https://github.com/roblox/foreman)
+- [Foreman](https://github.com/roblox/foreman)
+- [NodeJS](https://github.com/nodejs/node)
 
 ## Installation
-### From Github
 ```sh
 $ npm install IHaveNoZpu/sora -g
 ```
