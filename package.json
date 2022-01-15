@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Create Rojo apps with one command",
   "main": "src/index.js",
+  "bin": {
+    "sora": "src/index.js",
+    "create-roblox-app": "src/index.js"
+  },
   "directories": {
     "test": "tests"
   },
