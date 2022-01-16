@@ -3,6 +3,7 @@ Create Rojo apps with one command
 
 ## Note
 Sora is now in **development**. so there will have a bug and  some feture that unfinish.
+Before you use pls see in Issues first.
 
 ## Requirement
 - [Foreman](https://github.com/roblox/foreman)
