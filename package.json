@@ -1,8 +1,8 @@
 {
-  "name": "sora",
-  "version": "1.0.0",
+  "name": "create-rojo-app",
+  "version": "0.0.1",
   "description": "Create Rojo apps with one command",
-  "main": "src/index.js",
+  "main": "src/command.js",
   "bin": {
     "sora": "src/command.js",
     "create-roblox-app": "src/command.js",
@@ -24,7 +24,7 @@
     "fs": "^0.0.1-security",
     "inquirer": "^8.2.0",
     "log-symbols": "^4.1.0",
-    "ora": "^6.0.1",
+    "ora": "^5.4.1",
     "path": "^0.12.7"
   }
 }

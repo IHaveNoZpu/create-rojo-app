@@ -12,10 +12,7 @@ const { execSync } = require("child_process")
 const TemplateFolder = path.resolve(__dirname, "..", "template")
 
 // Functions \\
-function initGit(noGit, projectPath) {
-	if (noGit)
-		return console.log(sym.warning, chalk.yellowBright("You have used --nogit, Git will not init"))
-
+function initGit(projectPath) {
 	const commands = [
 		"git init",
 		"git add .",
@@ -65,9 +62,13 @@ function initProject(opt) {
 				const copyFileLoader = ora(chalk.cyanBright("Coping files...")).start()
 				await copy(templateFolder, projectPath)
 				copyFileLoader.succeed(chalk.cyanBright("Finished coping files!"))
-				const gitInitLoader = ora(chalk.cyanBright("Initializing git repo...")).start()
-				initGit(opt.nogit, projectPath)
-				gitInitLoader.succeed(chalk.cyanBright("Initialized git repo!"))
+				if (!opt.nogit) {
+					const gitInitLoader = ora(chalk.cyanBright("Initializing git repo...")).start()
+					initGit(projectPath)
+					gitInitLoader.succeed(chalk.cyanBright("Initialized git repo!"))
+				} else {
+					return console.log(sym.warning, chalk.yellowBright("You have used --nogit, Git will not init"))
+				}
 			} catch(err) {
 				return console.error(sym.error, chalk.redBright(err))
 			}
