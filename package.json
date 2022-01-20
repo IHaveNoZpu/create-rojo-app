@@ -1,17 +1,12 @@
 {
-  "name": "sora",
+  "name": "create-rojo-app",
   "version": "1.0.0",
   "description": "Create Rojo apps with one command",
-  "main": "src/index.js",
+  "main": "src/command.js",
   "bin": {
-    "sora": "src/index.js",
-    "create-roblox-app": "src/index.js"
-  },
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "node tests/index.js"
+    "sora": "src/command.js",
+    "create-roblox-app": "src/command.js",
+    "create-rojo-app": "src/command.js"
   },
   "repository": {
     "type": "git",
@@ -26,8 +21,10 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^8.3.0",
-    "fs-extra": "^10.0.0",
+    "fs": "^0.0.1-security",
     "inquirer": "^8.2.0",
+    "log-symbols": "^4.1.0",
+    "ora": "^5.4.1",
     "path": "^0.12.7"
   }
 }
