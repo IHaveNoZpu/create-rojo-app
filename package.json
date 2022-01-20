@@ -26,5 +26,11 @@
     "log-symbols": "^4.1.0",
     "ora": "^5.4.1",
     "path": "^0.12.7"
-  }
+  },
+  "keywords": [
+    "rojo",
+    "create-roblox-app",
+    "create-rojo-app",
+    "roblox"
+  ]
 }
