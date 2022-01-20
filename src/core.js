@@ -28,6 +28,21 @@ function initGit(projectPath) {
 	}
 }
 
+function installPackages(projectPath) {
+	const commands = [
+		"foreman install",
+		"wally install"
+	]
+
+	for (const cmd of commands) {
+		try {
+			execSync(`cd ${projectPath} && ${cmd}`)
+		} catch(err) {
+			console.error(sym.error, chalk.redBright(`Failed to install packages, ${err}`))
+		}
+	}
+}
+
 function initProject(opt) {
 	let questions = [
 		{
@@ -67,8 +82,26 @@ function initProject(opt) {
 					initGit(projectPath)
 					gitInitLoader.succeed(chalk.cyanBright("Initialized git repo!"))
 				} else {
-					return console.log(sym.warning, chalk.yellowBright("You have used --nogit, Git will not init"))
+					console.log(sym.warning, chalk.yellowBright("You have used --nogit, Git will not init."))
 				}
+				if (!opt.noinstall) {
+					const installLoader = ora(chalk.cyanBright("Installing packages...\n")).start()
+					installPackages(projectPath)
+					installLoader.succeed(chalk.cyanBright("Installed packages!"))
+				} else {
+					console.log(sym.warning, chalk.yellowBright("You have used --noinstall, You have to install packages your self."))
+				}
+
+				console.log([
+						`Success! Created ${projectName} at ${projectPath}`,
+						"",
+						"To stating rojo server type below command",
+						"",
+						`${chalk.cyan("cd")} ${path.join(process.cwd(), projectName)}`,
+						`${chalk.cyan("rojo serve")}`,
+						"",
+						"Join Discord server for support: https://discord.gg/mteJJrEFhj"
+					].join("\n"))
 			} catch(err) {
 				return console.error(sym.error, chalk.redBright(err))
 			}

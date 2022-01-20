@@ -17,9 +17,7 @@ const program = new Command(packageJson.name)
 // Program Options \\
 program
 	.option("-ng, --nogit", "Will not init git repository")
-// 	.option("-gh, --github <username> <repo-name>", "Use git repo for template (Clone From Github)")
-// 	.option("-gl, --gitlab <username> <repo-name>", "Use git repo for template (Clone From Gitlab)")
-// 	.option("-g, --git <url>", "Use git repo for template instand default template");
+	.option("-ni, --noinstall", "Will not install wally packages for you");
 
 // Run Program \\
 program.parse(process.argv)
