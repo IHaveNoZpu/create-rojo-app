@@ -1,15 +1,17 @@
 // Imports \\
-const fs = require("fs")
-const grape = require("fs/promises")
-const path = require("path")
-const ora = require("ora")
-const sym = require("log-symbols")
-const chalk = require("chalk")
-const { prompt } = require("inquirer")
-const { execSync } = require("child_process")
+import fs from "node:fs"
+import grape from "node:fs/promises"
+import { join, resolve, dirname } from "path"
+import { fileURLToPath } from "node:url"
+import ora from "ora"
+import sym from "log-symbols"
+import chalk from "chalk"
+import inquirer from "inquirer"
+import { execSync } from "node:child_process"
 
 // Variable \\
-const TemplateFolder = path.resolve(__dirname, "..", "template")
+const __dirname = dirname(dirname(fileURLToPath(import.meta.url)))
+const TemplateFolder = resolve(__dirname, "template")
 
 // Functions \\
 function initGit(projectPath) {
@@ -61,17 +63,17 @@ function initProject(opt) {
 		}
 	]
 
-	prompt(questions).then(async (ans) => {
+	inquirer.prompt(questions).then(async (ans) => {
 		const projectName = ans.name || "Template"
 		const gameTemplate = ans.gt
 
-		const projectPath = path.resolve(process.cwd(), projectName)
+		const projectPath = resolve(process.cwd(), projectName)
 		const existsPath = fs.existsSync(projectPath)
 
 		let con = existsPath ? await askForCon("We have found that folder is alrady exists.") : true
 
 		if (con) {
-			const templateFolder = path.resolve(TemplateFolder, gameTemplate.toLowerCase())
+			const templateFolder = resolve(TemplateFolder, gameTemplate.toLowerCase())
 
 			try {
 				const copyFileLoader = ora(chalk.cyanBright("Coping files...")).start()
@@ -97,7 +99,7 @@ function initProject(opt) {
 						"",
 						"To stating rojo server type below command",
 						"",
-						`${chalk.cyan("cd")} ${path.join(process.cwd(), projectName)}`,
+						`${chalk.cyan("cd")} ${join(process.cwd(), projectName)}`,
 						`${chalk.cyan("rojo serve")}`,
 						"",
 						"Join Discord server for support: https://discord.gg/mteJJrEFhj"
@@ -114,8 +116,8 @@ async function copy(from, to) {
 	const existsPath = fs.existsSync(to)
 	if (!existsPath) fs.mkdirSync(to)
 	for (const file of files) {
-		const fromPath = path.join(from, file.name)
-		const toPath = path.join(to, file.name)
+		const fromPath = join(from, file.name)
+		const toPath = join(to, file.name)
 		if (file.isDirectory()) {
 			await copy(fromPath, toPath)
 		} else {
@@ -144,7 +146,7 @@ async function askForCon(text) {
 		}
 	]
 
-	await prompt(question).then(ans => {
+	await inquirer.prompt(question).then(ans => {
 		const lower = ans.x.toLowerCase()
 
 		if (lower == "n" || lower == "no") {
@@ -158,6 +160,4 @@ async function askForCon(text) {
 }
 
 // Exports \\
-module.exports = {
-	initProject
-}
+export default initProject

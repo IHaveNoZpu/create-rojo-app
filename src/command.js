@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 // Imports \\
-const { Command } = require("commander")
+import { Command } from "commander"
+import fs from "node:fs"
 
-const { initProject } = require("./core.js")
-const packageJson = require("../package.json")
+import initProject from "./core.js"
+const packageJson = JSON.parse(fs.readFileSync("./package.json"))
 
 // Init Program \\
 const program = new Command(packageJson.name)

@@ -16,6 +16,7 @@
 - [NodeJS V.12 +](https://github.com/nodejs/node)
 
 ## Installation
+**You need to use nodejs version 12+** Bc this tools is now pure ESM.
 ### Stable
 ```sh
 $ npm install create-rojo-app -g
