@@ -13,7 +13,7 @@
 
 ## Requirement
 - [Foreman](https://github.com/roblox/foreman)
-- [NodeJS](https://github.com/nodejs/node)
+- [NodeJS V.12 +](https://github.com/nodejs/node)
 
 ## Installation
 ### Stable
@@ -22,7 +22,7 @@ $ npm install create-rojo-app -g
 ```
 ### Dev
 ```sh
-$ npm install IHaveNoZpu/create-rojo-app#dev -g
+$ npm install IHaveNoZpu/create-rojo-app -g
 ```
 ## Creating an App
 I recommend using Node version 14.0.0+.
