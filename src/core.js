@@ -45,6 +45,33 @@ function installPackages(projectPath) {
 	}
 }
 
+function changeName(projectPath, projectName) {
+	const wallyToml = resolve(projectPath, "wally.toml")
+	const foremanConfig = resolve(projectPath, "default.project.json")
+	fs.readFile(wallyToml, "utf8", function(err, data) {
+		if (err)
+			return console.error(sym.error, chalk.redBright(err))
+
+		const res = data.replace(/templateName/g, projectName)
+
+		fs.writeFile(wallyToml, res, "utf8", function(err) {
+			if (err)
+				return console.error(sym.error, chalk.redBright(err))
+		})
+	})
+	fs.readFile(foremanConfig, "utf8", function(err, data) {
+		if (err)
+			return console.error(sym.error, chalk.redBright(err))
+
+		const res = data.replace(/templateName/g, projectName)
+
+		fs.writeFile(foremanConfig, res, "utf8", function(err) {
+			if (err)
+				return console.error(sym.error, chalk.redBright(err))
+		})
+	})
+}
+
 function initProject(opt) {
 	let questions = [
 		{
@@ -78,6 +105,7 @@ function initProject(opt) {
 			try {
 				const copyFileLoader = ora(chalk.cyanBright("Coping files...")).start()
 				await copy(templateFolder, projectPath)
+				changeName(projectPath, projectName)
 				copyFileLoader.succeed(chalk.cyanBright("Finished coping files!"))
 				if (!opt.nogit) {
 					const gitInitLoader = ora(chalk.cyanBright("Initializing git repo...")).start()
