@@ -3,9 +3,15 @@
 // Imports \\
 import { Command } from "commander"
 import fs from "node:fs"
+import ora from "ora"
+import { dirname, resolve } from "path"
+import { fileURLToPath } from "node:url"
+
+// Variable \\
+const __dirname = dirname(dirname(fileURLToPath(import.meta.url)))
 
 import initProject from "./core.js"
-const packageJson = JSON.parse(fs.readFileSync("./package.json"))
+const packageJson = JSON.parse(fs.readFileSync(resolve(__dirname, "package.json")))
 
 // Init Program \\
 const program = new Command(packageJson.name)
