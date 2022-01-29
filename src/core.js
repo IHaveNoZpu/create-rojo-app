@@ -1,12 +1,11 @@
 // Imports \\
 import sym from "log-symbols"
 import chalk from "chalk"
-import inquirer from "inquirer"
 import fs from "node:fs"
-import grape from "./grape.js"
 import ora from "ora"
 import { resolve } from "path"
-import { execSync } from "node:child_process"
+import grape from "./utils/grape.js"
+import utils from "./utils/utils.js"
 
 // Main \\
 export default class Core {
@@ -16,56 +15,26 @@ export default class Core {
 		this.projectPath = args.dir ? resolve(process.cwd(), args.dir) : resolve(process.cwd(), this.name)
 		this.templatePath = templatePath
 		this.clear = !!args.clear
+		this.utils = utils
 	}
 
-	async askForCon(text = "", textB = "Would you like to continute [Yes/No]") {
-		const promptQuestion = {
-			type: "input",
-			name: "continute",
-			message: (chalk.yellowBright(`${text} ${textB}`)),
-			validate(val) {
-				const lower = val.toLowerCase()
-
-				if (lower == "y" || lower == "n" || lower == "yes" || lower == "no") {
-					return true
-				}
-
-				return "Please enter a valid answer [Yes/No]"
-			}
-		}
-
-		const { continute } = await inquirer.prompt(promptQuestion)
-		const lower = continute.toLowerCase()
-
-		return lower == "yes" || lower == "y"
-	}
-
-	runCommands(commandList, errText) {
-		for (const cmd of commandList) {
-			try {
-				execSync(`cd ${this.projectPath} && ${cmd}`)
-			} catch(err) {
-				console.error(sym.error, chalk.redBright(`${errText}, ${err}`))
-			}
-		}
-	}
-
+	// Functions \\
 	initGit(errText) {
 		const commands = [
-			"git init",
-			"git add ."
+			`cd ${this.projectPath} && git init`,
+			`cd ${this.projectPath} && git add .`
 		]
 
-		this.runCommands(commands, errText)
+		this.utils.runCommands(commands, errText)
 	}
 
 	installPackages(errText) {
 		const commands = [
-			"foreman install",
-			"wally install"
+			`cd ${this.projectPath} && foreman install`,
+			`cd ${this.projectPath} && wally install`
 		]
 
-		this.runCommands(commands, errText)
+		this.utils.runCommands(commands, errText)
 	}
 
 	async changeName() {
@@ -96,7 +65,7 @@ export default class Core {
 	async initProject() {
 		if (this.clear) {
 			console.warn(sym.warning, chalk.yellowBright("[WARNING] >> You have used --clear, it will clear directory if it already exist"))
-			const con = await this.askForCon()
+			const con = await this.utils.askForCon()
 			if (!con)
 				return
 		}
@@ -105,7 +74,7 @@ export default class Core {
 			fs.mkdirSync(this.projectPath)
 		if (fs.readdirSync(this.projectPath).length !== 0) {
 			if (!this.clear) {
-				const con = await this.askForCon("We have found that folder is alrady exists.", "Would you like to continute without clear the dir? [Yes/No]")
+				const con = await this.utils.askForCon("We have found that folder is alrady exists.", "Would you like to continute without clear the dir? [Yes/No]")
 				if (!con)
 					return
 			} else {
@@ -136,6 +105,18 @@ export default class Core {
 				this.initGit("Failed to initialize git repo")
 				loader.succeed(chalk.cyanBright("Initialized Git Repo!"))
 			}
+
+			console.log([
+				"",
+				`Success! Created ${this.name} at ${this.projectPath}`,
+				"",
+				"To stating rojo server type below command",
+				"",
+				`${chalk.cyan("cd")} ${resolve(process.cwd(), this.name)}`,
+				`${chalk.cyan("rojo serve")}`,
+				"",
+				"Join Discord server for support: https://discord.gg/mteJJrEFhj"
+			].join("\n"))
 
 		} catch(err) {
 			return console.error(sym.error, chalk.redBright(err))

@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IHaveNoZpu/sora.git"
+    "url": "git+https://github.com/BeautifulBrainStudio/sora.git"
   },
-  "author": "IHaveNoZpu",
+  "author": "BeautifulBrainStudio",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/IHaveNoZpu/sora/issues"
+    "url": "https://github.com/BeautifulBrainStudio/sora/issues"
   },
-  "homepage": "https://github.com/IHaveNoZpu/sora#readme",
+  "homepage": "https://github.com/BeautifulBrainStudio/sora#readme",
   "dependencies": {
     "chalk": "^5.0.0",
     "fs": "^0.0.1-security",

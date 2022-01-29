@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/IHaveNoZpu/create-rojo-app/blob/main/images/sora-logo.png" alt="Sora Logo" width="510" height="231"/>
+  <img src="https://github.com/IHaveNoZpu/BeautifulBrainStudio/blob/main/images/sora-logo.png" alt="Sora Logo" width="510" height="231"/>
   <h3>Sora is a tools that help you setup rojo project with one command inspired by <a href="https://github.com/facebook/create-react-app">create-react-app</a></h3>
 </div>
 
@@ -23,7 +23,7 @@ $ npm install create-rojo-app -g
 ```
 ### Dev
 ```sh
-$ npm install IHaveNoZpu/create-rojo-app -g
+$ npm install BeautifulBrainStudio/create-rojo-app -g
 ```
 ## Creating an App
 I recommend using Node version 14.0.0+.
@@ -43,4 +43,4 @@ $ sora -ng -ni
 ```
 
 ## License
-Sora is available under the terms of the Mozilla Public License, Version 2.0. See [LICENSE](https://github.com/IHaveNoZpu/sora/blob/main/LICENSE) for more details.
+Sora is available under the terms of the Mozilla Public License, Version 2.0. See [LICENSE](https://github.com/BeautifulBrainStudio/sora/blob/main/LICENSE) for more details.

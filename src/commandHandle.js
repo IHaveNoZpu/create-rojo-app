@@ -5,6 +5,7 @@ import { dirname, resolve } from "path"
 import { fileURLToPath } from "node:url"
 import inquirer from "inquirer"
 import Core from "./core.js"
+import update from "./utils/update.js"
 
 const __dirname = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -69,6 +70,9 @@ async function initProject(args) {
 }
 
 async function commmandHandle(args) {
+	if (!await update.checkForUpdate()) {
+		await update.updateSora()
+	}
 	if (args.help)
 		showHelp()
 	else if (args.version)
@@ -79,4 +83,5 @@ async function commmandHandle(args) {
 		await initProject(args)
 }
 
+// Exports \\
 export default commmandHandle
