@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/IHaveNoZpu/BeautifulBrainStudio/blob/main/images/sora-logo.png" alt="Sora Logo" width="510" height="231"/>
+  <img src="https://github.com/BeautifulBrainStudio/create-rojo-app/blob/main/images/sora-logo.png" alt="Sora Logo" width="510" height="231"/>
   <h3>Sora is a tools that help you setup rojo project with one command inspired by <a href="https://github.com/facebook/create-react-app">create-react-app</a></h3>
 </div>
 
