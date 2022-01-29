@@ -1,163 +1,28 @@
 // Imports \\
-import fs from "node:fs"
-import grape from "node:fs/promises"
-import { join, resolve, dirname } from "path"
-import { fileURLToPath } from "node:url"
-import ora from "ora"
 import sym from "log-symbols"
 import chalk from "chalk"
 import inquirer from "inquirer"
+import fs from "node:fs"
+import grape from "./grape.js"
+import ora from "ora"
+import { resolve } from "path"
 import { execSync } from "node:child_process"
 
-// Variable \\
-const __dirname = dirname(dirname(fileURLToPath(import.meta.url)))
-const TemplateFolder = resolve(__dirname, "template")
-
-// Functions \\
-function initGit(projectPath) {
-	const commands = [
-		"git init",
-		"git add .",
-		"git commit -m \"Init Project\""
-	]
-
-	for (const cmd of commands) {
-		try {
-			execSync(`cd ${projectPath} && ${cmd}`)
-		} catch(err) {
-			console.error(sym.error, chalk.redBright(`Failed to initialize git repo, ${err}`))
-		}
+// Main \\
+export default class Core {
+	constructor(name, args, templatePath) {
+		this.name = name || "app"
+		this.args = args
+		this.projectPath = args.dir ? resolve(process.cwd(), args.dir) : resolve(process.cwd(), this.name)
+		this.templatePath = templatePath
+		this.clear = !!args.clear
 	}
-}
 
-function installPackages(projectPath) {
-	const commands = [
-		"foreman install",
-		"wally install"
-	]
-
-	for (const cmd of commands) {
-		try {
-			execSync(`cd ${projectPath} && ${cmd}`)
-		} catch(err) {
-			console.error(sym.error, chalk.redBright(`Failed to install packages, ${err}`))
-		}
-	}
-}
-
-async function changeName(projectPath, projectName) {
-	const wallyToml = resolve(projectPath, "wally.toml")
-	const foremanConfig = resolve(projectPath, "default.project.json")
-	await grape.readFile(wallyToml, "utf8")
-		.then(async (data) => {
-			const res = data.replace(/templateName/g, `sora/${projectName}`)
-
-			await grape.writeFile(wallyToml, res)
-		})
-		.catch((err) => {
-			return console.error(sym.error, chalk.redBright(err))
-		})
-	await grape.readFile(foremanConfig, "utf8")
-		.then(async (data) => {
-			const res = data.replace(/templateName/g, `${projectName}`)
-
-			await grape.writeFile(foremanConfig, res)
-		})
-		.catch((err) => {
-			return console.error(sym.error, chalk.redBright(err))
-		})
-}
-
-function initProject(opt) {
-	let questions = [
-		{
+	async askForCon(text = "", textB = "Would you like to continute [Yes/No]") {
+		const promptQuestion = {
 			type: "input",
-			name: "name",
-			message: "Enter project name",
-		},
-		{
-			type: "list",
-			name: "gt",
-			message: "Select project template",
-			choices: [
-				"Knit",
-				"Normal"
-			],
-		}
-	]
-
-	inquirer.prompt(questions).then(async (ans) => {
-		const projectName = ans.name || "Template"
-		const gameTemplate = ans.gt
-
-		const projectPath = resolve(process.cwd(), projectName)
-		const existsPath = fs.existsSync(projectPath)
-
-		let con = existsPath ? await askForCon("We have found that folder is alrady exists.") : true
-
-		if (con) {
-			const templateFolder = resolve(TemplateFolder, gameTemplate.toLowerCase())
-
-			try {
-				const copyFileLoader = ora(chalk.cyanBright("Coping files...")).start()
-				await copy(templateFolder, projectPath)
-				await changeName(projectPath, projectName)
-				copyFileLoader.succeed(chalk.cyanBright("Finished coping files!"))
-				if (!opt.nogit) {
-					const gitInitLoader = ora(chalk.cyanBright("Initializing git repo...")).start()
-					initGit(projectPath)
-					gitInitLoader.succeed(chalk.cyanBright("Initialized git repo!"))
-				} else {
-					console.log(sym.warning, chalk.yellowBright("You have used --nogit, Git will not init."))
-				}
-				if (!opt.noinstall) {
-					const installLoader = ora(chalk.cyanBright("Installing packages...\n")).start()
-					installPackages(projectPath)
-					installLoader.succeed(chalk.cyanBright("Installed packages!"))
-				} else {
-					console.log(sym.warning, chalk.yellowBright("You have used --noinstall, You have to install packages your self."))
-				}
-
-				console.log([
-						`Success! Created ${projectName} at ${projectPath}`,
-						"",
-						"To stating rojo server type below command",
-						"",
-						`${chalk.cyan("cd")} ${join(process.cwd(), projectName)}`,
-						`${chalk.cyan("rojo serve")}`,
-						"",
-						"Join Discord server for support: https://discord.gg/mteJJrEFhj"
-					].join("\n"))
-			} catch(err) {
-				return console.error(sym.error, chalk.redBright(err))
-			}
-		}
-	})
-}
-
-async function copy(from, to) {
-	const files = await grape.readdir(from, { withFileTypes: true })
-	const existsPath = fs.existsSync(to)
-	if (!existsPath) fs.mkdirSync(to)
-	for (const file of files) {
-		const fromPath = join(from, file.name)
-		const toPath = join(to, file.name)
-		if (file.isDirectory()) {
-			await copy(fromPath, toPath)
-		} else {
-			await grape.copyFile(fromPath, toPath)
-		}
-	}
-}	
-
-async function askForCon(text) {
-	let res
-
-	const question = [
-		{
-			type: "input",
-			name: "x",
-			message: (chalk.yellowBright(`${text} Would you like to continute [Yes/No]`)),
+			name: "continute",
+			message: (chalk.yellowBright(`${text} ${textB}`)),
 			validate(val) {
 				const lower = val.toLowerCase()
 
@@ -165,23 +30,115 @@ async function askForCon(text) {
 					return true
 				}
 
-				return "Please ennter a valid answer [Yes/No]"
+				return "Please enter a valid answer [Yes/No]"
 			}
 		}
-	]
 
-	await inquirer.prompt(question).then(ans => {
-		const lower = ans.x.toLowerCase()
+		const { continute } = await inquirer.prompt(promptQuestion)
+		const lower = continute.toLowerCase()
 
-		if (lower == "n" || lower == "no") {
-			res = false
-		} else {
-			res = true
+		return lower == "yes" || lower == "y"
+	}
+
+	runCommands(commandList, errText) {
+		for (const cmd of commandList) {
+			try {
+				execSync(`cd ${this.projectPath} && ${cmd}`)
+			} catch(err) {
+				console.error(sym.error, chalk.redBright(`${errText}, ${err}`))
+			}
 		}
-	})
+	}
 
-	return res
+	initGit(errText) {
+		const commands = [
+			"git init",
+			"git add ."
+		]
+
+		this.runCommands(commands, errText)
+	}
+
+	installPackages(errText) {
+		const commands = [
+			"foreman install",
+			"wally install"
+		]
+
+		this.runCommands(commands, errText)
+	}
+
+	async changeName() {
+		const wallyConfig = resolve(this.projectPath, "wally.toml")
+		const foremanConfig = resolve(this.projectPath, "default.project.json")
+
+		await grape.readFile(wallyConfig, "utf8")
+			.then(async (data) => {
+				const res = data.replace(/templateName/g, `sora/${this.name}`)
+
+				await grape.writeFile(wallyConfig, res)
+			})
+			.catch((err) => {
+				return console.error(sym.error, chalk.redBright(`[ERROR] >> ${err}`))
+			})
+
+		await grape.readFile(foremanConfig, "utf8")
+			.then(async (data) => {
+				const res = data.replace(/templateName/g, this.name)
+
+				await grape.writeFile(foremanConfig, res)
+			})
+			.catch((err) => {
+				return console.error(sym.error, chalk.redBright(`[ERROR] >> ${err}`))
+			})
+	}
+
+	async initProject() {
+		if (this.clear) {
+			console.warn(sym.warning, chalk.yellowBright("[WARNING] >> You have used --clear, it will clear directory if it already exist"))
+			const con = await this.askForCon()
+			if (!con)
+				return
+		}
+
+		if (!fs.existsSync(this.projectPath))
+			fs.mkdirSync(this.projectPath)
+		if (fs.readdirSync(this.projectPath).length !== 0) {
+			if (!this.clear) {
+				const con = await this.askForCon("We have found that folder is alrady exists.", "Would you like to continute without clear the dir? [Yes/No]")
+				if (!con)
+					return
+			} else {
+				// const con = await this.askForCon("We have found that folder is alrady exists.", "Would you like to continute with clear the dir? [Yes/No]")
+				// if (!con)
+				// 	return
+
+				const loader = ora(chalk.cyanBright("Clearing Directory...")).start()
+				await grape.remove(this.projectPath);
+				loader.succeed(chalk.cyanBright("Directory cleared!"))
+			}
+		}
+
+		try {
+			const loader = ora(chalk.cyanBright("Coping files...")).start()
+			await grape.copy(this.templatePath, this.projectPath)
+			await this.changeName()
+			loader.succeed(chalk.cyanBright("Finished coping files!"))
+
+			if (!this.args.noWally) {
+				const loader = ora(chalk.cyanBright("Installing Packages...\n")).start()
+				this.installPackages("Failed to install packages")
+				loader.succeed(chalk.cyanBright("Installed Packages!"))
+			}
+
+			if (!this.args.noGit) {
+				const loader = ora(chalk.cyanBright("Initializing Git Repo...\n")).start()
+				this.initGit("Failed to initialize git repo")
+				loader.succeed(chalk.cyanBright("Initialized Git Repo!"))
+			}
+
+		} catch(err) {
+			return console.error(sym.error, chalk.redBright(err))
+		}
+	}
 }
-
-// Exports \\
-export default initProject

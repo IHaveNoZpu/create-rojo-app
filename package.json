@@ -21,12 +21,12 @@
   "homepage": "https://github.com/IHaveNoZpu/sora#readme",
   "dependencies": {
     "chalk": "^5.0.0",
-    "commander": "^8.3.0",
     "fs": "^0.0.1-security",
     "inquirer": "^8.2.0",
     "log-symbols": "^5.1.0",
     "ora": "^6.0.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "yargs": "^17.3.1"
   },
   "keywords": [
     "rojo",
